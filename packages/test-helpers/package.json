@@ -1,0 +1,25 @@
+{
+  "name": "@incident-hub/test-helpers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared test helpers, generators, and utilities for the Incident Response Platform",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "test": "jest --run",
+    "test:unit": "jest --testPathPattern=unit --run",
+    "test:property": "jest --testPathPattern=property --run"
+  },
+  "dependencies": {
+    "@incident-hub/shared-types": "*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "fast-check": "^3.15.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "~5.3.3"
+  }
+}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: incident-hub-quota
+  namespace: incident-hub
+  labels:
+    app.kubernetes.io/part-of: incident-response-platform
+spec:
+  hard:
+    requests.cpu: "2"
+    requests.memory: "4Gi"
+    limits.cpu: "4"
+    limits.memory: "8Gi"
+    pods: "20"
+    persistentvolumeclaims: "5"

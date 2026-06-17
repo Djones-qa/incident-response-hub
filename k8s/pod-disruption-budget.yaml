@@ -1,0 +1,51 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: incident-engine-pdb
+  namespace: incident-hub
+  labels:
+    app.kubernetes.io/part-of: incident-response-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: incident-engine
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: notification-service-pdb
+  namespace: incident-hub
+  labels:
+    app.kubernetes.io/part-of: incident-response-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: notification-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: analytics-service-pdb
+  namespace: incident-hub
+  labels:
+    app.kubernetes.io/part-of: incident-response-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: analytics-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: runbook-worker-pdb
+  namespace: incident-hub
+  labels:
+    app.kubernetes.io/part-of: incident-response-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: runbook-worker

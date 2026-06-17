@@ -1,0 +1,35 @@
+{
+  "name": "incident-response-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Incident Response and Post-Mortem Management Platform",
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.ts\"",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:property": "jest --testPathPattern=property",
+    "test:integration": "jest --testPathPattern=integration"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "fast-check": "^3.15.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "~5.3.3"
+  }
+}

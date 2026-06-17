@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "outDir": "./dist",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "./packages/shared-types" },
+    { "path": "./packages/shared-utils" },
+    { "path": "./packages/test-helpers" },
+    { "path": "./services/incident-engine" },
+    { "path": "./services/notification-service" },
+    { "path": "./services/analytics-service" },
+    { "path": "./services/runbook-worker" }
+  ],
+  "exclude": ["node_modules", "dist"]
+}

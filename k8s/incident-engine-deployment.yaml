@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incident-engine
+  namespace: incident-hub
+  labels:
+    app: incident-engine
+    app.kubernetes.io/part-of: incident-response-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: incident-engine
+  template:
+    metadata:
+      labels:
+        app: incident-engine
+    spec:
+      containers:
+        - name: incident-engine
+          image: incident-hub/incident-engine:latest
+          ports:
+            - containerPort: 4000
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          env:
+            - name: PORT
+              value: "4000"
+            - name: NODE_ENV
+              value: "production"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: incident-hub-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: incident-hub-config
+                  key: DB_PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: incident-hub-config
+                  key: DB_NAME
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: incident-hub-secrets
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: incident-hub-secrets
+                  key: DB_PASSWORD
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: incident-hub-config
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: incident-hub-config
+                  key: REDIS_PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: incident-engine
+  namespace: incident-hub
+  labels:
+    app: incident-engine
+spec:
+  selector:
+    app: incident-engine
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+  type: ClusterIP

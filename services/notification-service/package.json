@@ -1,0 +1,26 @@
+{
+  "name": "@incident-hub/notification-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Notification delivery and escalation service",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@incident-hub/shared-types": "*",
+    "@incident-hub/shared-utils": "*",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/uuid": "^9.0.7",
+    "typescript": "~5.3.3"
+  }
+}

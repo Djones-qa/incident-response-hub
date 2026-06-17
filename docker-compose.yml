@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: incident-response-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: incident_response
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/incident-engine/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: incident-response-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  incident-engine:
+    build:
+      context: .
+      dockerfile: services/incident-engine/Dockerfile
+    container_name: incident-response-engine
+    ports:
+      - '4000:4000'
+    environment:
+      PORT: '4000'
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: '5432'
+      DB_NAME: incident_response
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: '6379'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    container_name: incident-response-notifications
+    ports:
+      - '4001:4001'
+    environment:
+      PORT: '4001'
+      NODE_ENV: development
+      REDIS_HOST: redis
+      REDIS_PORT: '6379'
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  analytics-service:
+    build:
+      context: .
+      dockerfile: services/analytics-service/Dockerfile
+    container_name: incident-response-analytics
+    ports:
+      - '4002:4002'
+    environment:
+      PORT: '4002'
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: '5432'
+      DB_NAME: incident_response
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: '6379'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  runbook-worker:
+    build:
+      context: .
+      dockerfile: services/runbook-worker/Dockerfile
+    container_name: incident-response-runbook-worker
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: '5432'
+      DB_NAME: incident_response
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: '6379'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
