@@ -91,7 +91,8 @@ async function consumeIncidentEvents(): Promise<void> {
 
     if (!results || results.length === 0) return;
 
-    for (const [, messages] of results) {
+    const streams = results as Array<[string, Array<[string, string[]]>]>;
+    for (const [, messages] of streams) {
       for (const [messageId, fields] of messages) {
         const event = parseStreamMessage(fields);
         if (event) {

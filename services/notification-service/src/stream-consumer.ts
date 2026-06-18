@@ -136,7 +136,8 @@ export async function startStreamConsumer(): Promise<void> {
         continue;
       }
 
-      for (const [_stream, messages] of results) {
+      const streams = results as Array<[string, Array<[string, string[]]>]>;
+      for (const [_stream, messages] of streams) {
         for (const [messageId, fieldArray] of messages) {
           // Convert field array to object
           const fields: Record<string, string> = {};

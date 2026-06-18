@@ -70,16 +70,17 @@ async function consumeLoop(): Promise<void> {
         config.consumer.group,
         config.consumer.name,
         'COUNT',
-        config.consumer.batchSize,
+        String(config.consumer.batchSize),
         'BLOCK',
-        config.consumer.blockTimeout,
+        String(config.consumer.blockTimeout),
         'STREAMS',
         STREAM_KEY,
         '>'
       );
 
       if (results) {
-        for (const [, messages] of results) {
+        const streams = results as Array<[string, Array<[string, string[]]>]>;
+        for (const [, messages] of streams) {
           for (const [id, fields] of messages) {
             await processMessage(id, fields);
           }
