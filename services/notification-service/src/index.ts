@@ -3,6 +3,7 @@ import { config } from './config.js';
 import { redis, checkRedisConnection } from './redis.js';
 import { startTimerManager, stopTimerManager } from './escalation/timer-manager.js';
 import { notificationRoutes } from './routes/notifications.js';
+import { escalationPoliciesRouter } from './routes/escalation-policies.js';
 import { startStreamConsumer } from './stream-consumer.js';
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Register routes
 app.use(notificationRoutes);
+app.use('/escalation-policies', escalationPoliciesRouter);
 
 app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'ok' });
